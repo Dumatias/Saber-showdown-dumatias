@@ -20,8 +20,8 @@ button.Parent = screenGui
 button.MouseButton1Click:Connect(function()
     game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("MouseDown"):FireServer()
     local args = {
-        [9] = 9,
-        [9] = 9,
+        [1] = 3,
+        [2] = 1,
         [3] = false,
         [4] = false
     }
@@ -35,7 +35,7 @@ button.MouseButton1Click:Connect(function()
         local playerCharacter = player.Character
         if playerCharacter and playerCharacter:FindFirstChild("Humanoid") then
             local args = {
-                [9] = playerCharacter
+                [1] = playerCharacter
             }
 
             lightsaberRemotes:WaitForChild("OnHit"):FireServer(unpack(args))
