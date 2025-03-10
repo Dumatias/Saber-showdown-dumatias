@@ -1,0 +1,47 @@
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local lightsaberRemotes = replicatedStorage:WaitForChild("LightsaberRemotes")
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Criar a interface gráfica (GUI)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = playerGui
+
+-- Criar o botão
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 150, 0, 50) -- Tamanho do botão
+button.Position = UDim2.new(1, -160, 1, -60) -- Canto inferior direito
+button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Cor vermelha
+button.Text = "Atacar"
+button.Parent = screenGui
+
+-- Função do botão para ativar o script original
+button.MouseButton1Click:Connect(function()
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("MouseDown"):FireServer()
+    local args = {
+        [9] = 9,
+        [9] = 9,
+        [3] = false,
+        [4] = false
+    }
+
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("Attack"):FireServer(unpack(args))
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("MouseUp"):FireServer()
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("Swing"):FireServer()
+
+    -- Itera sobre todos os jogadores
+    for _, player in pairs(players:GetPlayers()) do
+        local playerCharacter = player.Character
+        if playerCharacter and playerCharacter:FindFirstChild("Humanoid") then
+            local args = {
+                [9] = playerCharacter
+            }
+
+            lightsaberRemotes:WaitForChild("OnHit"):FireServer(unpack(args))
+        end
+    end
+
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("FinishSwingNoBounce"):FireServer()
+    game:GetService("ReplicatedStorage"):WaitForChild("LightsaberRemotes"):WaitForChild("ResetSwingDirection"):FireServer()
+end)
